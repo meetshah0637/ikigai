@@ -1,0 +1,507 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ikigai Life Purpose Creator</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4a90e2;
+      --passion: #ff6b6b;
+      --mission: #4ecdc4;
+      --vocation: #45b7d1;
+      --profession: #96ceb4;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 2rem;
+      padding: 2rem;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+    }
+
+    .ikigai-intro {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #666;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 0.8rem;
+      border: 2px solid #eee;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus, .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    }
+
+    button {
+      width: 100%;
+      padding: 1rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+    }
+
+    .response {
+      margin-top: 2rem;
+      padding: 2rem;
+      border-radius: 8px;
+      background: #f8f9fa;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .response.show {
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    .ikigai-section {
+      border-left: 4px solid;
+      padding-left: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .passion-section { border-color: var(--passion); }
+    .mission-section { border-color: var(--mission); }
+    .vocation-section { border-color: var(--vocation); }
+    .profession-section { border-color: var(--profession); }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 1rem;
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container animate__animated animate__fadeIn">
+    <h1>Find Your Ikigai</h1>
+    <div class="ikigai-intro">
+      <p>Discover your life's purpose through the Japanese concept of Ikigai - 
+         the intersection of what you love, what you're good at, 
+         what the world needs, and what you can be paid for.</p>
+    </div>
+    
+    <form id="ikigaiForm">
+      <div class="form-group" style="animation-delay: 0.1s">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" required placeholder="Enter your name">
+      </div>
+
+      <div class="form-group" style="animation-delay: 0.2s">
+        <label for="passion">What You Love (Passion)</label>
+        <textarea id="passion" required placeholder="What activities make you lose track of time?"></textarea>
+      </div>
+
+      <div class="form-group" style="animation-delay: 0.3s">
+        <label for="mission">What You're Good At (Mission)</label>
+        <textarea id="mission" required placeholder="What are your natural talents and strengths?"></textarea>
+      </div>
+
+      <div class="form-group" style="animation-delay: 0.4s">
+        <label for="vocation">What the World Needs (Vocation)</label>
+        <textarea id="vocation" required placeholder="What problems do you want to solve?"></textarea>
+      </div>
+
+      <div class="form-group" style="animation-delay: 0.5s">
+        <label for="profession">What You Can Be Paid For (Profession)</label>
+        <textarea id="profession" required placeholder="What services or skills would people pay you for?"></textarea>
+      </div>
+
+      <div class="form-group" style="animation-delay: 0.6s">
+        <button type="submit">Discover Your Life Purpose</button>
+      </div>
+    </form>
+
+    <div class="response" id="response"></div>
+  </div>
+
+  <script>
+    document.getElementById('ikigaiForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      
+      const formData = {
+        name: document.getElementById('name').value,
+        passion: document.getElementById('passion').value,
+        mission: document.getElementById('mission').value,
+        vocation: document.getElementById('vocation').value,
+        profession: document.getElementById('profession').value
+      };
+      
+      try {
+        const response = await fetch('/generate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          const responseDiv = document.getElementById('response');
+          responseDiv.innerHTML = `
+            <h2>Your Ikigai Journey, ${result.data.name}</h2>
+            <div class="ikigai-section passion-section">
+              <h3>Your Passion</h3>
+              <p>${result.data.ikigaiElements.passion}</p>
+            </div>
+            <div class="ikigai-section mission-section">
+              <h3>Your Mission</h3>
+              <p>${result.data.ikigaiElements.mission}</p>
+            </div>
+            <div class="ikigai-section vocation-section">
+              <h3>Your Vocation</h3>
+              <p>${result.data.ikigaiElements.vocation}</p>
+            </div>
+            <div class="ikigai-section profession-section">
+              <h3>Your Profession</h3>
+              <p>${result.data.ikigaiElements.profession}</p>
+            </div>
+            <h3>Analysis</h3>
+            <p>${result.data.analysis}</p>
+          `;
+          responseDiv.classList.add('show');
+        } else {
+          alert('Error: ' + result.error);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while generating your Ikigai.');
+      }
+    });
+
+    // Add animation to form groups on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      const formGroups = document.querySelectorAll('.form-group');
+      formGroups.forEach((group, index) => {
+        setTimeout(() => {
+          group.style.opacity = '1';
+          group.style.transform = 'translateY(0)';
+        }, index * 100);
+      });
+    });
+  </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ikigai Life Purpose Creator</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4a90e2;
+      --passion: #ff6b6b;
+      --mission: #4ecdc4;
+      --vocation: #45b7d1;
+      --profession: #96ceb4;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 2rem;
+      padding: 2rem;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+    }
+
+    .ikigai-intro {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #666;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 0.8rem;
+      border: 2px solid #eee;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus, .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    }
+
+    button {
+      width: 100%;
+      padding: 1rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+    }
+
+    .response {
+      margin-top: 2rem;
+      padding: 2rem;
+      border-radius: 8px;
+      background: #f8f9fa;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .response.show {
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    .ikigai-section {
+      border-left: 4px solid;
+      padding-left: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .passion-section { border-color: var(--passion); }
+    .mission-section { border-color: var(--mission); }
+    .vocation-section { border-color: var(--vocation); }
+    .profession-section { border-color: var(--profession); }
+
+    .analysis {
+      background: #e9f7ef;
+      border-left: 4px solid #4a90e2;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      color: #333;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 1rem;
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container animate__animated animate__fadeIn">
+    <h1>Find Your Ikigai</h1>
+    <div class="ikigai-intro">
+      <p>Discover your life's purpose through the Japanese concept of Ikigai - 
+         the intersection of what you love, what you're good at, 
+         what the world needs, and what you can be paid for.</p>
+    </div>
+    
+    <form id="ikigaiForm">
+      <div class="form-group" style="animation-delay: 0.1s">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" required placeholder="Enter your name">
+      </div>
+
+      <div class="form-group" style="animation-delay: 0.2s">
+        <label for="passion">What You Love (Passion)</label>
+        <textarea id="passion" required placeholder="What activities make you lose track of time?"></textarea>
+      </div>
+
+      <div class="form-group" style="animation-delay: 0.3s">
+        <label for="mission">What You're Good At (Mission)</label>
+        <textarea id="mission" required placeholder="What are your natural talents and strengths?"></textarea>
+      </div>
+
+      <div class="form-group" style="animation-delay: 0.4s">
+        <label for="vocation">What the World Needs (Vocation)</label>
+        <textarea id="vocation" required placeholder="What problems do you want to solve?"></textarea>
+      </div>
+
+      <div class="form-group" style="animation-delay: 0.5s">
+        <label for="profession">What You Can Be Paid For (Profession)</label>
+        <textarea id="profession" required placeholder="What services or skills would people pay you for?"></textarea>
+      </div>
+
+      <div class="form-group" style="animation-delay: 0.6s">
+        <button type="submit">Discover Your Life Purpose</button>
+      </div>
+    </form>
+
+    <div class="response" id="response"></div>
+  </div>
+
+  <script>
+    document.getElementById('ikigaiForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      
+      const formData = {
+        name: document.getElementById('name').value,
+        passion: document.getElementById('passion').value,
+        mission: document.getElementById('mission').value,
+        vocation: document.getElementById('vocation').value,
+        profession: document.getElementById('profession').value
+      };
+      
+      try {
+        const response = await fetch('/generate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          const responseDiv = document.getElementById('response');
+          responseDiv.innerHTML = `
+            <h2>Your Ikigai Journey, ${result.data.name}</h2>
+            <div class="ikigai-section passion-section">
+              <h3>Your Passion</h3>
+              <p>${result.data.ikigaiElements.passion}</p>
+            </div>
+            <div class="ikigai-section mission-section">
+              <h3>Your Mission</h3>
+              <p>${result.data.ikigaiElements.mission}</p>
+            </div>
+            <div class="ikigai-section vocation-section">
+              <h3>Your Vocation</h3>
+              <p>${result.data.ikigaiElements.vocation}</p>
+            </div>
+            <div class="ikigai-section profession-section">
+              <h3>Your Profession</h3>
+              <p>${result.data.ikigaiElements.profession}</p>
+            </div>
+            <h3>Analysis</h3>
+            <div class="analysis">
+              <ul>
+                ${result.data.analysis.split('\n').map(line => `<li>${line}</li>`).join('')}
+              </ul>
+            </div>
+          `;
+          responseDiv.classList.add('show');
+        } else {
+          alert('Error: ' + result.error);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while generating your Ikigai.');
+      }
+    });
+
+    // Add animation to form groups on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      const formGroups = document.querySelectorAll('.form-group');
+      formGroups.forEach((group, index) => {
+        setTimeout(() => {
+          group.style.opacity = '1';
+          group.style.transform = 'translateY(0)';
+        }, index * 100);
+      });
+    });
+  </script>
+</body>
+</html>
